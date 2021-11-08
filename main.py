@@ -11,7 +11,7 @@ from botocore.session import get_session
 
 class PublicObjectCheck:
     def __init__(self):
-        self.config_data = load_config(">>CONFIG_FILE<<")
+        self.config_data = load_config("config.json")
         self.session_credentials = RefreshableCredentials.create_from_metadata(
             metadata=self.refresh_credentials(),
             refresh_using=self.refresh_credentials,
@@ -19,9 +19,9 @@ class PublicObjectCheck:
         )
         self.session = self.set_session()
         self.file_results = open("./result_objects_{}.txt".format(self.config_data["account_id"]), "w")
-        self.ses_client = boto3.client('ses', region_name=">>REGION_SES<<")
-        self.s3_client = self.session.client('s3', region_name='REGION_S3')
-        self.s3_resource = self.session.resource('s3', region_name='REGION_S3')
+        self.ses_client = boto3.client('ses', region_name=self.config_data["region_ses"])
+        self.s3_client = self.session.client('s3', region_name=self.config_data["region_s3"])
+        self.s3_resource = self.session.resource('s3', region_name=self.config_data["region_s3"])
         self.no_of_objects_checked = 0
         self.no_of_objects_checked_total = 0
         self.current_bucket = None
@@ -233,3 +233,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
